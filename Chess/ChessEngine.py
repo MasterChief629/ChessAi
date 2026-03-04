@@ -132,15 +132,15 @@ class GameState():
         if move.pieceCaptured == 'wR':
             if move.endRow == 7:
                 if move.endCol == 0:
-                    self.currentCastlingRight.wqs = False
+                    self.currentCastlingRights.wqs = False
                 elif move.endCol == 7:
-                    self.currentCastlingRight.wks = False
+                    self.currentCastlingRights.wks = False
         elif move.pieceCaptured == 'bR':
             if move.endRow == 0:
                 if move.endCol == 0:
-                    self.currentCastlingRight.bqs = False
+                    self.currentCastlingRights.bqs = False
                 elif move.endCol == 7:
-                    self.currentCastlingRight.bks = False
+                    self.currentCastlingRights.bks = False
 
 
     def getValidMoves(self):
