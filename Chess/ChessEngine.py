@@ -29,8 +29,8 @@ class GameState():
         self.inCheck = False
         self.pins = []
         self.checks = []
-        self.checkMate = False
-        self.staleMate = False
+        self.checkmate = False
+        self.stalemate = False
         self.enpassantPossible = ()
         self.currentCastleRights = CastleRights(True, True, True, True)
         self.castleRightLog = [CastleRights(self.currentCastleRights.wks, self.currentCastleRights.wqs,
@@ -179,6 +179,12 @@ class GameState():
         else:
             moves = self.getAllPossibleMoves()
 
+        if len(moves) == 0:
+            if self.inCheck:
+                self.checkmate = True
+            else:
+                self.stalemate = True
+        
         return moves
 
 
