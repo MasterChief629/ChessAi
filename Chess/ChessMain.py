@@ -72,15 +72,28 @@ def main():
         if moveMade:
             validMoves = State.getValidMoves()
             moveMade = False
-        drawGameState(screen, State)
+        drawGameState(screen, State, validMoves, sqSelected)
         clock.tick(MAX_FPS)
         p.display.flip()
 
 """graphics of game state"""
-def drawGameState(screen, State):
+def drawGameState(screen, State, validMoves, sqSelected):
     drawBoard(screen)
+    highlightSquares(screen, State, validMoves, sqSelected)
     drawPieces(screen, State.board)
 
+def highlightSquares(screen, State, validMoves, sqSelected):
+    if sqSelected != ():
+        r, c = sqSelected
+        if State.board[r][c][0] == ('w' if State.whiteToMove else 'b'):
+            s = p.Surface((SQ_SIZE, SQ_SIZE))
+            s.set_alpha(100)
+            s.fill(p.Color('purple'))
+            screen.blit(s, (c*SQ_SIZE, r*SQ_SIZE))
+            s.fill(p.Color('blue'))
+            for move in validMoves:
+                if move.startRow == r and move.startCol == c:
+                    screen.blit(s, (SQ_SIZE*move.endCol, SQ_SIZE*move.endRow))
 
 def drawBoard(screen):
     colors = [p.Color("Tan"), p.Color("Brown")]
