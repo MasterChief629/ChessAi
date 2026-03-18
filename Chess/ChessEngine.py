@@ -44,9 +44,9 @@ class GameState():
         self.moveLog.append(move)
         self.whiteToMove = not self.whiteToMove
         if move.pieceMoved == 'wK':
-            self.whiteKingLocation == (move.endRow, move.endCol)
+            self.whiteKingLocation = (move.endRow, move.endCol)
         elif move.pieceMoved == 'bK':
-            self.blackKingLocation == (move.endRow, move.endCol)
+            self.blackKingLocation = (move.endRow, move.endCol)
 
         if move.isPawnPromotion:
             print("Enter a number and press enter to select a piece to promote to")
@@ -86,9 +86,9 @@ class GameState():
             self.board[move.endRow][move.endCol] = move.pieceCaptured
             self.whiteToMove = not self.whiteToMove
             if move.pieceMoved == 'wK':
-                self.whiteKingLocation == (move.startRow, move.startCol)
+                self.whiteKingLocation = (move.startRow, move.startCol)
             elif move.pieceMoved == 'bK':
-                self.blackKingLocation == (move.startRow, move.startCol)
+                self.blackKingLocation = (move.startRow, move.startCol)
             
             if move.isEnpassantMove:
                 self.board[move.endRow][move.endCol] = "--"
@@ -235,7 +235,7 @@ class GameState():
                 else:
                     break
 
-        knightMoves = ((-2,-1), (-2,1), (-1,-2), (1,-2), (1,-2), (1,2), (2,-1), (2,1))
+        knightMoves = ((-2,-1), (-2,1), (-1,-2), (-1,2), (1,-2), (1,2), (2,-1), (2,1))
         for m in knightMoves:
             endRow = startRow + m[0]
             endCol = startCol + m[1]
@@ -344,7 +344,7 @@ class GameState():
                 piecePinned = True
                 self.pins.remove(self.pins[i])
                 break
-        knightMoves = ((-2,-1), (-2,1), (-1,-2), (1,-2), (1,-2), (1,2), (2,-1), (2,1))
+        knightMoves = ((-2,-1), (-2,1), (-1,-2), (-1,2), (1,-2), (1,2), (2,-1), (2,1))
         allyColor = "w" if self.whiteToMove else "b"
         for m in knightMoves:
             endRow = r + m[0]
@@ -407,7 +407,7 @@ class GameState():
                         self.whiteKingLocation = (endRow, endCol)
                     else:
                         self.blackKingLocation = (endRow, endCol)
-                    inCheck, pins, checks = self.checkForPinsAndChecks(r, c)
+                    inCheck, pins, checks = self.checkForPinsAndChecks(endRow, endCol)
                     if not inCheck:
                         moves.append(Move((r,c), (endRow, endCol), self.board))
                     if allyColor =='w':

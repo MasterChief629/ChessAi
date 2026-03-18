@@ -5,6 +5,7 @@ display gamestate
 
 import pygame as p
 import ChessEngine
+import ChessAi
 
 
 WIDTH = HEIGHT = 800
@@ -29,19 +30,23 @@ def main():
     validMoves = State.getValidMoves()
     moveMade = False
 
+    playerOne = True #Represents a human playing white if true, or an Ai playing white if false
+    playerTwo = False #same as prior but for black
+
     loadImages()
     running = True
     sqSelected = ()
     playerClicks = []
     gameOver = False
     while running:
+        humanTurn = (State.whiteToMove and playerOne) or (not State.whiteToMove and playerTwo)
         for e in p.event.get():
 
             if e.type == p.QUIT:
                 running = False
 
             elif e.type == p.MOUSEBUTTONDOWN:
-                if not gameOver:
+                if not gameOver and humanTurn:
                     location = p.mouse.get_pos()
                     col = location[0]//SQ_SIZE
                     row = location[1]//SQ_SIZE
@@ -78,6 +83,11 @@ def main():
                     moveMade = False
                     gameOver = False
 
+        #AI implementation
+        if not gameOver and not humanTurn:
+            AIMove = ChessAi.findRandomMove(validMoves)
+            State.makeMove(AIMove)
+            moveMade = True
 
         if moveMade:
             validMoves = State.getValidMoves()
@@ -89,13 +99,15 @@ def main():
             if State.whiteToMove:
                 drawText(screen, 'Black wins by checkmate')
             else:
-                drawText(screen, 'White wins by chechmate')
+                drawText(screen, 'White wins by checkmate')
         elif State.stalemate:
             gameOver = True
             drawText(screen, 'Stalemate')
 
         clock.tick(MAX_FPS)
         p.display.flip()
+
+
 
 """graphics of game state"""
 def drawGameState(screen, State, validMoves, sqSelected):
