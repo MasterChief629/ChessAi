@@ -49,12 +49,13 @@ class GameState():
             self.blackKingLocation = (move.endRow, move.endCol)
 
         if move.isPawnPromotion:
-            print("Enter a number and press enter to select a piece to promote to")
-            print("0 = Queen")
-            print("1 = Rook")
-            print("2 = Bishop")
-            print("3 = Knight")
-            piece = int(input("Selected number: "))
+            #print("Enter a number and press enter to select a piece to promote to")
+            #print("0 = Queen")
+            #print("1 = Rook")
+            #print("2 = Bishop")
+            #print("3 = Knight")
+            #piece = int(input("Selected number: "))
+            piece = 0
             self.board[move.endRow][move.endCol] = move.pieceMoved[0] + move.promotions[piece]
 
         if move.isEnpassantMove:
@@ -108,6 +109,9 @@ class GameState():
                 else:
                     self.board[move.endRow][move.endCol-2] = self.board[move.endRow][move.endCol+1]
                     self.board[move.endRow][move.endCol+1] = '--'
+            
+            self.checkmate = False
+            self.stalement = False
 
 
     def updateCastleRights(self, move):

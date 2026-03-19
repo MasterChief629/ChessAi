@@ -85,7 +85,9 @@ def main():
 
         #AI implementation
         if not gameOver and not humanTurn:
-            AIMove = ChessAi.findRandomMove(validMoves)
+            AIMove = ChessAi.findBestMinMax(State, validMoves)
+            if AIMove == None:
+                AIMove = ChessAi.findRandomMove(validMoves)
             State.makeMove(AIMove)
             moveMade = True
 
