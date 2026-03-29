@@ -35,6 +35,9 @@ class GameState():
         self.currentCastleRights = CastleRights(True, True, True, True)
         self.castleRightLog = [CastleRights(self.currentCastleRights.wks, self.currentCastleRights.wqs,
                                             self.currentCastleRights.bks, self.currentCastleRights.bqs)]
+        self.positionCounts = {}
+        key = self.getPositionKey()
+        self.positionCounts[key] = 1
 
 
 
@@ -77,6 +80,13 @@ class GameState():
         self.updateCastleRights(move)
         self.castleRightLog.append(CastleRights(self.currentCastleRights.wks, self.currentCastleRights.wqs,
                                             self.currentCastleRights.bks, self.currentCastleRights.bqs))
+        
+        key = self.getPositionKey()
+        move.positionKey = key
+        if key in self.positionCounts:
+            self.positionCounts[key] += 1
+        else:
+            self.positionCounts[key] = 1
 
 
 
@@ -111,7 +121,10 @@ class GameState():
                     self.board[move.endRow][move.endCol+1] = '--'
             
             self.checkmate = False
-            self.stalement = False
+            self.stalemate = False
+
+            if move.positionKey in self.positionCounts:
+                self.positionCounts[move.positionKey] -= 1
 
 
     def updateCastleRights(self, move):
@@ -176,8 +189,8 @@ class GameState():
                             break
                     for i in range(len(moves) -1, -1, -1):
                         if moves[i].pieceMoved[1] != 'K':
-                            if not (moves[i].endRow, moves[i].endCol) in validSquares:
-                                moves.remove(moves[i])
+                            if (moves[i].endRow, moves[i].endCol) not in validSquares:
+                                moves.pop(i)
             else:
                 self.getKingMoves(kingRow, kingCol, moves)
         else:
@@ -446,6 +459,25 @@ class GameState():
                 moves.append(Move((r,c), (r,c-2), self.board, isCastleMove = True))
 
 
+
+    def getPositionKey(self):
+        boardStr = ""
+        for row in self.board:
+            boardStr += "".join(row)
+
+        turn = "w" if self.whiteToMove else "b"
+
+        castle = ""
+        if self.currentCastleRights.wks: castle += "K"
+        if self.currentCastleRights.wqs: castle += "Q"
+        if self.currentCastleRights.bks: castle += "k"
+        if self.currentCastleRights.bqs: castle += "q"
+
+        enpassant = str(self.enpassantPossible)
+
+        return boardStr + turn + castle + enpassant
+
+
 class CastleRights():
     def __init__(self, wks, wqs, bks, bqs):
         self.wks = wks
@@ -481,6 +513,7 @@ class Move():
             self.pieceCaptured = 'bp' if self.pieceMoved == 'wp' else 'wp'
         self.moveID = self.startRow * 1000 + self.startCol * 100 + self.endRow * 10 + self.endCol
         self.isCastleMove = isCastleMove
+        self.positionKey = None
 
     def __eq__(self, other):
         if isinstance(other, Move):

@@ -30,7 +30,7 @@ def main():
     validMoves = State.getValidMoves()
     moveMade = False
 
-    playerOne = True #Represents a human playing white if true, or an Ai playing white if false
+    playerOne = False #Represents a human playing white if true, or an Ai playing white if false
     playerTwo = False #same as prior but for black
 
     loadImages()
