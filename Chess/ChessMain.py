@@ -118,6 +118,15 @@ def drawGameState(screen, State, validMoves, sqSelected):
     drawPieces(screen, State.board)
 
 def highlightSquares(screen, State, validMoves, sqSelected):
+
+    if len(State.moveLog) > 0:
+        lastMove = State.moveLog[-1]
+        s = p.Surface((SQ_SIZE, SQ_SIZE))
+        s.set_alpha(120)
+        s.fill(p.Color('green'))
+        screen.blit(s, (lastMove.startCol * SQ_SIZE, lastMove.startRow * SQ_SIZE))
+        screen.blit(s, (lastMove.endCol * SQ_SIZE, lastMove.endRow * SQ_SIZE))
+
     if sqSelected != ():
         r, c = sqSelected
         if State.board[r][c][0] == ('w' if State.whiteToMove else 'b'):

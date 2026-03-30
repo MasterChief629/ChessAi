@@ -64,7 +64,17 @@ def findRecursiveGreedyMove(State, validMoves, depth, whiteToMove):
         for move in validMoves:
             State.makeMove(move)
             nextMoves = State.getValidMoves()
+
+            savedInCheck = State.inCheck
+            savedPins = State.pins[:]
+            savedChecks = State.checks[:]
+
             score = findRecursiveGreedyMove(State, nextMoves, depth - 1, False)
+
+            State.inCheck = savedInCheck
+            State.pins = savedPins
+            State.checks = savedChecks
+
             if score > maxScore:
                 maxScore = score
                 if depth == DEPTH:
@@ -76,7 +86,17 @@ def findRecursiveGreedyMove(State, validMoves, depth, whiteToMove):
         for move in validMoves:
             State.makeMove(move)
             nextMoves = State.getValidMoves()
+
+            savedInCheck = State.inCheck
+            savedPins = State.pins[:]
+            savedChecks = State.checks[:]
+
             score = findRecursiveGreedyMove(State, nextMoves, depth - 1, True)
+
+            State.inCheck = savedInCheck
+            State.pins = savedPins
+            State.checks = savedChecks
+
             if score < minScore:
                 minScore = score
                 if depth == DEPTH:

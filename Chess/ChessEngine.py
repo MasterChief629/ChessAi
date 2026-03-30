@@ -42,6 +42,9 @@ class GameState():
 
 
     def makeMove(self, move):
+        move.inCheck = self.inCheck
+        move.pins = self.pins[:]
+        move.checks = self.checks[:]
         self.board[move.startRow][move.startCol] = "--"
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.moveLog.append(move)
@@ -125,6 +128,10 @@ class GameState():
 
             if move.positionKey in self.positionCounts:
                 self.positionCounts[move.positionKey] -= 1
+            
+            self.inCheck = move.inCheck
+            self.pins = move.pins
+            self.checks = move.checks
 
 
     def updateCastleRights(self, move):
