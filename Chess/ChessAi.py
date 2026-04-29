@@ -1,16 +1,23 @@
+"""
+Allows for different AI algorithms to be implemented for the opponent
+"""
 import random
 
+#set up heuristics for the algorithms to use
 pieceScores = {"K": 0, "Q": 10, "R": 5, "B": 3, "N": 3, "p": 3}
 CHECKMATE = 1000
 STALEMATE = 0
 DEPTH = 3
 
 
+#very basic AI that just chooses a random valid move
+#not currently beingused
 def findRandomMove(validMoves):
     return validMoves[random.randint(0, len(validMoves)-1)]
 
 
-#Two move depth
+#Two move depth non-recursive greedy
+#also not currently being used
 def findGreedyMove(State, validMoves):
     turnMultiplier = 1 if State.whiteToMove else -1
     opponentMinMaxScore = -CHECKMATE
@@ -52,13 +59,15 @@ def findBestMinMax(State, validMoves):
     return nextMove
 
 
+#recursive greedy algorithm that allows for different depths to be picked
 def findRecursiveGreedyMove(State, validMoves, depth, whiteToMove):
     random.shuffle(validMoves)
     global nextMove
     
+    #base case, returns the score of each end move
     if depth == 0:
         return scoreBoard(State)
-    
+    #checks the weights and pins/checks for all of white's moves
     if whiteToMove:
         maxScore = -CHECKMATE
         for move in validMoves:
@@ -81,6 +90,7 @@ def findRecursiveGreedyMove(State, validMoves, depth, whiteToMove):
                     nextMove = move
             State.undoMove()
         return maxScore
+    #checks the weights and pins/checks for all of black's moves
     else:
         minScore = CHECKMATE
         for move in validMoves:
@@ -105,6 +115,7 @@ def findRecursiveGreedyMove(State, validMoves, depth, whiteToMove):
         return minScore
 
 
+#original scoreboard used for the nonrecursive greedy
 #def scoreBoard(board):
     score = 0
     for row in board:
